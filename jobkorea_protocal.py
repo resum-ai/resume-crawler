@@ -18,3 +18,12 @@ driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install()),
     options=chrome_options.add_argument("--headless"),
 )
+
+file = open('/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt','r')
+
+# jobkorea.login_protocol(driver=driver)
+while True: # 7354개
+    file_url = file.readline()
+    if file_url == "":
+        break
+    jobkorea.self_introduction_crawl(driver=driver,file_url=file_url)

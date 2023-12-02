@@ -1,10 +1,19 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import json
+import requests
+
+with open('secrets.json', 'r') as file:
+    secrets = json.load(file)
+
+jobkorea_id = secrets['ID']
+jobkorea_password = secrets['PASSWORD']
 
 def link_crawl(driver):
-    array= []
+    self_introduction_links = []
     f = open("/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt",'w')
-    for i in range(1,369):
+    # 전체 page 개수 - 여기서는 49개
+    for i in range(1,49):
         driver.get("https://www.jobkorea.co.kr/starter/PassAssay?schPart=10031&schWork=&schEduLevel=&schCType=&schGroup=&isSaved=1&isFilterChecked=1&OrderBy=0&schTxt=&page=" + str(i))
         paper_list = driver.find_element(By.XPATH,"/html/body/div[4]/div[2]/div[2]/div[5]/ul")
         driver.implicitly_wait(3)
@@ -14,25 +23,36 @@ def link_crawl(driver):
             if 'selfintroduction' in url.get_attribute('href'):
                 pass
             else:
-                array.append(url.get_attribute('href'))
-    array = list(set(array))
-    for content in array:
+                self_introduction_links.append(url.get_attribute('href'))
+    self_introduction_links = list(set(self_introduction_links))
+    for content in self_introduction_links:
         f.write(content+'\n')
     f.close()
 
-def login_protocol(driver:webdriver.Chrome): # 로그인해야지 로그인창때문에 크롤링 멈추는거 막을 수 있음
+def login_protocol(driver:webdriver.Chrome):
     driver.get("https://www.jobkorea.co.kr/")
-    driver.find_element(By.XPATH,"/html/body/div[5]/div/div[1]/div[1]/ul/li[1]/button").click()
-    driver.find_element(By.ID,"lb_id").send_keys("id")
-    driver.find_element(By.ID,"lb_pw").send_keys("pw")
-    driver.find_element(By.XPATH,"/html/body/div[5]/div/div[1]/div[1]/ul/li[1]/div/form/fieldset/div[1]/button").click()
     driver.implicitly_wait(3)
-    driver.find_element(By.ID,"closeIncompleteResume")
+    # 쿠키 정보 설정
+    cookies = {
+        'JK%5FUser': ''
+    }
+
+    # 요청 전송
+    response = requests.get('https://www.jobkorea.co.kr/', cookies=cookies)
+    # print(jobkorea_id)
+    # driver.find_element(By.XPATH,'//*[@id="btnKaLogin"]').click()
+    # # driver.find_element(By.XPATH,'//*[@id="devMyPage"]/ul/li[1]/a').click()
+    # # driver.find_element(By.ID,"M_ID").send_keys(jobkorea_id)
+    # # driver.find_element(By.ID,"M_PWD").send_keys(jobkorea_password)
+    # # driver.find_element(By.XPATH,'//*[@id="form"]/fieldset/div[3]/button').click()
+    # driver.implicitly_wait(3)
+    # driver.find_element(By.XPATH, '//*[@id="mainContent"]/div/div/form/div[4]/button[1]').click()
+    # # driver.find_element(By.ID,"closeIncompleteResume")
     driver.implicitly_wait(3)
+    print(response)
     print("login success")
 
 def self_introduction_crawl(driver:webdriver.Chrome,file_url):
-    print("current URL : "+ file_url)
     driver.get(file_url)
     user_info = driver.find_element(By.XPATH,'//*[@id="container"]/div[2]/div[1]/div[1]/h2')
     company = user_info.find_element(By.TAG_NAME,'a')
