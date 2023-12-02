@@ -14,6 +14,9 @@ driver = webdriver.Chrome(
 )
 
 self_introduction_links = []
+
+f = open("/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt",'w')
+
 for i in range(1,2):
     driver.get("https://www.jobkorea.co.kr/starter/PassAssay?schPart=10031&schWork=&schEduLevel=&schCType=&schGroup=&isSaved=1&isFilterChecked=1&OrderBy=0&schTxt=&page="+str(i))
     # page에 따른 경로
@@ -29,4 +32,7 @@ for i in range(1,2):
         else:
             self_introduction_links.append(url.get_attribute('href')) # href안에 있는 경로를 array에 추가해준다.
 self_introduction_links = list(set(self_introduction_links))
-print(self_introduction_links, len(self_introduction_links))
+
+for content in self_introduction_links:
+    f.write(content + '\n')
+f.close()
