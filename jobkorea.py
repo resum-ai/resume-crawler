@@ -29,28 +29,20 @@ def link_crawl(driver):
         f.write(content+'\n')
     f.close()
 
-def login_protocol(driver:webdriver.Chrome):
-    driver.get("https://www.jobkorea.co.kr/")
-    driver.implicitly_wait(3)
-    # 쿠키 정보 설정
-    cookies = {
-        'JK%5FUser': ''
-    }
+def add_cookies(driver, cookies):
+    for cookie in cookies:
+        driver.add_cookie(cookie)
 
-    # 요청 전송
-    response = requests.get('https://www.jobkorea.co.kr/', cookies=cookies)
-    # print(jobkorea_id)
-    # driver.find_element(By.XPATH,'//*[@id="btnKaLogin"]').click()
-    # # driver.find_element(By.XPATH,'//*[@id="devMyPage"]/ul/li[1]/a').click()
-    # # driver.find_element(By.ID,"M_ID").send_keys(jobkorea_id)
-    # # driver.find_element(By.ID,"M_PWD").send_keys(jobkorea_password)
-    # # driver.find_element(By.XPATH,'//*[@id="form"]/fieldset/div[3]/button').click()
-    # driver.implicitly_wait(3)
-    # driver.find_element(By.XPATH, '//*[@id="mainContent"]/div/div/form/div[4]/button[1]').click()
-    # # driver.find_element(By.ID,"closeIncompleteResume")
-    driver.implicitly_wait(3)
-    print(response)
-    print("login success")
+def add_local_storage(driver, local_storage_data):
+    for key, value in local_storage_data.items():
+        driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+
+def login_with_cookies_and_local_storage(driver, file_url, cookies, local_storage_data):
+    driver.get(file_url)  # 사이트 초기 URL
+    add_cookies(driver, cookies)
+    driver.refresh()  # 쿠키를 추가한 후 페이지 새로고침
+    add_local_storage(driver, local_storage_data)
+    driver.get(file_url)  # 로컬 스토리지를 추가한 후 페이지 재진입
 
 def self_introduction_crawl(driver:webdriver.Chrome,file_url):
     driver.get(file_url)
