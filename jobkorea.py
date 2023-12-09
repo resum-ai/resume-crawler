@@ -29,21 +29,6 @@ def link_crawl(driver):
         f.write(content+'\n')
     f.close()
 
-def add_cookies(driver, cookies):
-    for cookie in cookies:
-        driver.add_cookie(cookie)
-
-def add_local_storage(driver, local_storage_data):
-    for key, value in local_storage_data.items():
-        driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
-
-def login_with_cookies_and_local_storage(driver, file_url, cookies, local_storage_data):
-    driver.get(file_url)  # 사이트 초기 URL
-    add_cookies(driver, cookies)
-    driver.refresh()  # 쿠키를 추가한 후 페이지 새로고침
-    add_local_storage(driver, local_storage_data)
-    driver.get(file_url)  # 로컬 스토리지를 추가한 후 페이지 재진입
-
 def self_introduction_crawl(driver:webdriver.Chrome,file_url):
     driver.get(file_url)
     user_info = driver.find_element(By.XPATH,'//*[@id="container"]/div[2]/div[1]/div[1]/h2')
