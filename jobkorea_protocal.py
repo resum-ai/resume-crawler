@@ -1,10 +1,6 @@
 import json
-
-from selenium.webdriver.common import by
-
 import jobkorea
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 import ssl
@@ -32,12 +28,10 @@ file = open('/Users/jang-youngjoon/학교/2023-2학기/조�
 driver.get(jobkorea_login_url)
 
 while True:
-    # driver.implicitly_wait(5)
     file_url = file.readline()
     print(file_url)
     if file_url == "":
         break
-    # jobkorea.login_with_cookies_and_local_storage(driver=driver, file_url=file_url, cookies=cookies, local_storage_data=local_storage_data)
     jobkorea.self_introduction_crawl(driver=driver, file_url=file_url)
 
 

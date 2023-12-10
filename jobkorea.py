@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 import json
 import requests
@@ -30,33 +31,43 @@ def link_crawl(driver):
     f.close()
 
 def self_introduction_crawl(driver:webdriver.Chrome,file_url):
+    question_list = []
+    answer_list = []
+
     driver.get(file_url)
+
     user_info = driver.find_element(By.XPATH,'//*[@id="container"]/div[2]/div[1]/div[1]/h2')
     company = user_info.find_element(By.TAG_NAME,'a')
-    print(company.text) # 지원회사
+    print("지원 회사: ", company.text) # 지원회사
     season= user_info.find_element(By.TAG_NAME,'em')
-    print(season.text) # 지원시기
+    print("지원 시기: ", season.text) # 지원시기
     specification=driver.find_element(By.CLASS_NAME,'specLists')
     spec_array = specification.text.split('\n')
-    print(spec_array[:-2]) #스펙
+    print("지원 스펙: ", spec_array[:-2]) #스펙
     paper = driver.find_element(By.CLASS_NAME,"qnaLists")
     questions = paper.find_elements(By.TAG_NAME,'dt')
-    print("question")
+    print("회사 질문")
     for index in questions:
         question = index.find_element(By.CLASS_NAME,'tx')
         if question.text=="":
             index.find_element(By.TAG_NAME,'button').click()
             question = index.find_element(By.CLASS_NAME,'tx')
-            print(question.text)
+            question_list.append(question.text)
+            # print(question.text)
         else:
-            print(question.text) # 자소서 질문 모아놓은 리스트
+            question_list.append(question.text)
+            # print(question.text) # 자소서 질문 모아놓은 리스트
+    print(question_list)
     driver.implicitly_wait(3)
+
     answers = paper.find_elements(By.TAG_NAME,'dd')
     driver.implicitly_wait(3)
-    print('answer')
+    print('답변')
     for index in range(len(answers)):
         answer =answers[index].find_element(By.CLASS_NAME,'tx')
         if answer.text == "":
             questions[index].find_element(By.TAG_NAME,'button').click()
             answer =answers[index].find_element(By.CLASS_NAME,'tx')
-        print(answer.text) # 자소서 답변 모아놓은 리스트
+        answer_list.append(answer.text)
+    print(answer_list)
+    # print(answer.text) # 자소서 답변 모아놓은 리스트
