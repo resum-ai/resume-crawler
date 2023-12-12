@@ -39,7 +39,7 @@ driver = webdriver.Chrome(
 #     f.write(content + '\n')
 # f.close()
 
-#test
+# test
 
 jobkorea.link_crawl(driver)
 # jobkorea.self_introduction_crawl(driver, "https://www.jobkorea.co.kr/starter/PassAssay/View/241147?Page=1&OrderBy=0&FavorCo_Stat=0&schPart=10031&Pass_An_Stat=0")

@@ -6,7 +6,7 @@ from selenium.webdriver.chrome.service import Service
 import ssl
 import os
 
-with open('secrets.json', 'r') as secret_file:
+with open("secrets.json", "r") as secret_file:
     secrets = json.load(secret_file)
 
 jobkorea_login_url = secrets["LOGIN_URL"]
@@ -23,7 +23,7 @@ driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install()),
     options=chrome_options.add_argument("--headless"),
 )
-file = open('/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt','r')
+file = open("/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt", "r")
 
 driver.get(jobkorea_login_url)
 
@@ -33,6 +33,3 @@ while True:
     if file_url == "":
         break
     jobkorea.self_introduction_crawl(driver=driver, file_url=file_url)
-
-
-
