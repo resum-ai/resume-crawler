@@ -81,6 +81,10 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
         answer_list.append(answer.text)
     print(answer_list)
     self_introduction_dict = {
-
+        #"self_introduction_index":
+        "company": company.text,
+        "date": season.text,
+        "question_list": question_list, # embedding으로 변형되어야 함
+        "answer_list": answer_list,
     }
     # print(answer.text) # 자소서 답변 모아놓은 리스트
