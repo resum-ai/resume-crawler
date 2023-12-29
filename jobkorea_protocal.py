@@ -27,9 +27,30 @@ file = open("/Users/jang-youngjoon/학교/2023-2학기/조�
 
 driver.get(jobkorea_login_url)
 
+read_count = 1
+
+qa_data = []
+
 while True:
     file_url = file.readline()
-    print(file_url)
+    print(read_count, "번째 줄")
+
     if file_url == "":
         break
-    jobkorea.self_introduction_crawl(driver=driver, file_url=file_url)
+
+    try:
+        question_list, answer_list = jobkorea.self_introduction_crawl(driver=driver, file_url=file_url)
+
+        for index in range(len(question_list)):
+            qa_data.append({
+                "Question": f"{question_list[index]}",
+                "Answer": f"{answer_list[index]}"
+            })
+
+        print(qa_data)
+        print(len(qa_data))
+
+    except Exception as e:
+        print(f"{read_count}번째에서 다음 에러가 발생했습니다: {e}")
+
+    read_count += 1

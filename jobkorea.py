@@ -44,16 +44,16 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
 
     driver.get(file_url)
 
-    user_info = driver.find_element(
-        By.XPATH, '//*[@id="container"]/div[2]/div[1]/div[1]/h2'
-    )
-    company = user_info.find_element(By.TAG_NAME, "a")
-    print("지원 회사: ", company.text)  # 지원회사
-    season = user_info.find_element(By.TAG_NAME, "em")
-    print("지원 시기: ", season.text)  # 지원시기
-    specification = driver.find_element(By.CLASS_NAME, "specLists")
-    spec_array = specification.text.split("\n")
-    print("지원 스펙: ", spec_array[:-2])  # 스펙
+    # user_info = driver.find_element(
+    #     By.XPATH, '//*[@id="container"]/div[2]/div[1]/div[1]/h2'
+    # )
+    # company = user_info.find_element(By.TAG_NAME, "a")
+    # print("지원 회사: ", company.text)  # 지원회사
+    # season = user_info.find_element(By.TAG_NAME, "em")
+    # print("지원 시기: ", season.text)  # 지원시기
+    # specification = driver.find_element(By.CLASS_NAME, "specLists")
+    # spec_array = specification.text.split("\n")
+    # print("지원 스펙: ", spec_array[:-2])  # 스펙
     paper = driver.find_element(By.CLASS_NAME, "qnaLists")
     questions = paper.find_elements(By.TAG_NAME, "dt")
     print("회사 질문")
@@ -63,10 +63,8 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
             index.find_element(By.TAG_NAME, "button").click()
             question = index.find_element(By.CLASS_NAME, "tx")
             question_list.append(question.text)
-            # print(question.text)
         else:
             question_list.append(question.text)
-            # print(question.text) # 자소서 질문 모아놓은 리스트
     print(question_list)
     driver.implicitly_wait(3)
 
@@ -80,11 +78,9 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
             answer = answers[index].find_element(By.CLASS_NAME, "tx")
         answer_list.append(answer.text)
     print(answer_list)
-    self_introduction_dict = {
-        #"self_introduction_index":
-        "company": company.text,
-        "date": season.text,
-        "question_list": question_list, # embedding으로 변형되어야 함
-        "answer_list": answer_list,
+
+    return {
+        "question_list": question_list,
+        "answer_list": answer_list
     }
-    # print(answer.text) # 자소서 답변 모아놓은 리스트
+
