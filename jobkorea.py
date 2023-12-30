@@ -56,7 +56,7 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
     # print("지원 스펙: ", spec_array[:-2])  # 스펙
     paper = driver.find_element(By.CLASS_NAME, "qnaLists")
     questions = paper.find_elements(By.TAG_NAME, "dt")
-    print("회사 질문")
+    # print("회사 질문")
     for index in questions:
         question = index.find_element(By.CLASS_NAME, "tx")
         if question.text == "":
@@ -65,19 +65,19 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
             question_list.append(question.text)
         else:
             question_list.append(question.text)
-    print(question_list)
+    # print(question_list)
     driver.implicitly_wait(3)
 
     answers = paper.find_elements(By.TAG_NAME, "dd")
     driver.implicitly_wait(3)
-    print("답변")
+    # print("답변")
     for index in range(len(answers)):
         answer = answers[index].find_element(By.CLASS_NAME, "tx")
         if answer.text == "":
             questions[index].find_element(By.TAG_NAME, "button").click()
             answer = answers[index].find_element(By.CLASS_NAME, "tx")
         answer_list.append(answer.text)
-    print(answer_list)
+    # print(answer_list)
 
     return {
         "question_list": question_list,

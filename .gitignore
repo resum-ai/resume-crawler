@@ -5,3 +5,5 @@ venv/
 secrets.json
 
 __pycache__/
+
+crawling_data.db
