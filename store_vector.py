@@ -10,41 +10,30 @@ import pinecone
 from langchain.chains import RetrievalQA
 import json
 
+from lib.openai_call import get_embedding
+from lib.store import chunks, generate_data
+
 with open("secrets.json", "r") as file:
    secrets = json.load(file)
 
 pinecone.init(api_key=secrets["PINECONE_API_KEY"], environment="gcp-starter")
 
+index = pinecone.Index('resumai-self-introduction-index')
 
-if __name__ == '__main__':
-    print("Hello VectorStore!")
+#데이터 로딩
+conn = sqlite3.connect('crawling_data.db')
+cursor = conn.cursor()
 
-    conn = sqlite3.connect('crawling_data.db')
-    cursor = conn.cursor()
+cursor.execute("SELECT * FROM data")
+datas = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM data")
-    rows = cursor.fetchall()
+conn.close()
 
-    for row in rows:
-        print(row)
+with pinecone.Index('resumai-self-introduction-index', pool_threads=30) as pinecone_index:
+    async_results = [
+        pinecone_index.upsert(vectors=ids_vectors_chunk, async_req=True)
+        for ids_vectors_chunk in chunks(generate_data(datas), batch_size=100)
+    ]
+    [async_result.get() for async_result in async_results]
 
-    conn.close()
 
-
-    # loader = TextLoader('/Users/jang-youngjoon/dev-projects/intro-to-vector-db/mediumblogs/mediumblog1.txt')
-    # document = loader.load()
-    #
-    # text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    # texts = text_splitter.split_documents(document)
-    # print(len(texts))
-    #
-    # embeddings = OpenAIEmbeddings(openai_api_key=os.environ.get("OPENAI_API_KEY"))
-    #
-    # docsearch = Pinecone.from_documents(texts, embeddings, index_name="medium-blogs-embeddings-index")
-    #
-    # qa = RetrievalQA.from_chain_type(
-    #     llm=OpenAI(), chain_type="stuff", retriever=docsearch.as_retriever(), return_source_document=True
-    # )
-    # query = "What is a vector DB? Give me a 15 word answer for a beginner"
-    # result = qa({"query": query})
-    # print(result)
