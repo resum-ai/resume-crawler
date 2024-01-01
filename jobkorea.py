@@ -44,16 +44,6 @@ def self_introduction_crawl(driver: webdriver.Chrome, file_url):
 
     driver.get(file_url)
 
-    # user_info = driver.find_element(
-    #     By.XPATH, '//*[@id="container"]/div[2]/div[1]/div[1]/h2'
-    # )
-    # company = user_info.find_element(By.TAG_NAME, "a")
-    # print("지원 회사: ", company.text)  # 지원회사
-    # season = user_info.find_element(By.TAG_NAME, "em")
-    # print("지원 시기: ", season.text)  # 지원시기
-    # specification = driver.find_element(By.CLASS_NAME, "specLists")
-    # spec_array = specification.text.split("\n")
-    # print("지원 스펙: ", spec_array[:-2])  # 스펙
     paper = driver.find_element(By.CLASS_NAME, "qnaLists")
     questions = paper.find_elements(By.TAG_NAME, "dt")
     # print("회사 질문")

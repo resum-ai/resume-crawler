@@ -40,9 +40,14 @@ driver = webdriver.Chrome(
 )
 file = open("/Users/jang-youngjoon/학교/2023-2학기/졸프/jobkorea_link.txt", "r")
 
+# 처음 n줄을 건너뛰기
+crawled = 499
+for _ in range(crawled):
+    next(file)
+
 driver.get(jobkorea_login_url)
 
-read_count = 1
+read_count = crawled
 
 qa_data = []
 
